@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>$OWLHOOT — The Owl Has Arrived</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #05050f;
+  --bg2: #080815;
+  --purple: #7c3aed;
+  --violet: #5b21b6;
+  --glow: #a78bfa;
+  --gold: #f5c518;
+  --cream: #fef3c7;
+  --text: #f0eeff;
+  --muted: #6b7280;
+  --border: rgba(124,58,237,0.2);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── CUSTOM CURSOR ── */
+.cursor {
+  position: fixed;
+  width: 20px; height: 20px;
+  border: 2px solid var(--glow);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.1s, border-color 0.2s;
+  transform: translate(-50%, -50%);
+}
+.cursor-dot {
+  position: fixed;
+  width: 4px; height: 4px;
+  background: var(--glow);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+}
+
+/* ── STARS BG ── */
+#stars-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 48px;
+  background: linear-gradient(to bottom, rgba(5,5,15,0.95), transparent);
+  backdrop-filter: blur(10px);
+}
+
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 4px;
+  color: var(--glow);
+  text-shadow: 0 0 30px rgba(167,139,250,0.5);
+}
+
+.nav-links {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--glow); }
+
+.nav-cta {
+  background: var(--purple);
+  color: white !important;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 11px !important;
+  letter-spacing: 2px !important;
+  transition: all 0.2s !important;
+}
+.nav-cta:hover {
+  background: var(--violet) !important;
+  box-shadow: 0 0 20px rgba(124,58,237,0.5);
+  transform: translateY(-1px);
+}
+
+/* ── HERO ── */
+#hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  padding: 120px 24px 80px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.hero-glow {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 700px; height: 700px;
+  background: radial-gradient(ellipse, rgba(124,58,237,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+#owl-canvas {
+  width: 220px;
+  height: 220px;
+  margin-bottom: 32px;
+  filter: drop-shadow(0 0 40px rgba(124,58,237,0.6));
+  animation: owlFloat 4s ease-in-out infinite;
+}
+
+@keyframes owlFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-16px); }
+}
+
+.hero-eyebrow {
+  font-size: 11px;
+  letter-spacing: 6px;
+  color: var(--purple);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.3s;
+}
+
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(72px, 14vw, 160px);
+  letter-spacing: 8px;
+  line-height: 0.9;
+  color: var(--text);
+  text-shadow: 0 0 80px rgba(167,139,250,0.3);
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.5s;
+}
+
+.hero-title span {
+  color: var(--glow);
+  text-shadow: 0 0 60px rgba(167,139,250,0.6);
+}
+
+.hero-sub {
+  font-size: 14px;
+  color: var(--muted);
+  letter-spacing: 2px;
+  margin-top: 20px;
+  max-width: 480px;
+  line-height: 1.8;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.7s;
+}
+
+.hero-sub em {
+  color: var(--glow);
+  font-style: normal;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 16px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+  justify-content: center;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.9s;
+}
+
+.btn-primary {
+  background: var(--purple);
+  color: white;
+  padding: 16px 36px;
+  border-radius: 10px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  border: none;
+  cursor: none;
+}
+.btn-primary:hover {
+  background: var(--violet);
+  box-shadow: 0 8px 32px rgba(124,58,237,0.5);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--glow);
+  padding: 16px 36px;
+  border-radius: 10px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-decoration: none;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+  cursor: none;
+}
+.btn-secondary:hover {
+  border-color: var(--purple);
+  background: rgba(124,58,237,0.1);
+  transform: translateY(-2px);
+}
+
+/* ── TICKER TAPE ── */
+.ticker-wrap {
+  width: 100%;
+  overflow: hidden;
+  background: var(--purple);
+  padding: 14px 0;
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid rgba(167,139,250,0.3);
+  border-bottom: 1px solid rgba(167,139,250,0.3);
+}
+
+.ticker-inner {
+  display: flex;
+  white-space: nowrap;
+  animation: ticker 20s linear infinite;
+}
+
+.ticker-item {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 4px;
+  color: white;
+  padding: 0 40px;
+  opacity: 0.9;
+}
+
+.ticker-item span { color: var(--gold); }
+
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ── SECTIONS ── */
+section {
+  position: relative;
+  z-index: 1;
+  padding: 100px 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.section-label {
+  font-size: 10px;
+  letter-spacing: 5px;
+  color: var(--purple);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(42px, 6vw, 72px);
+  letter-spacing: 3px;
+  line-height: 1;
+  margin-bottom: 20px;
+}
+
+/* ── ABOUT ── */
+#about {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.about-text p {
+  font-size: 15px;
+  color: #9ca3af;
+  line-height: 2;
+  margin-bottom: 20px;
+}
+
+.about-text p strong {
+  color: var(--glow);
+  font-weight: 500;
+}
+
+.about-visual {
+  position: relative;
+}
+
+#owl-about-canvas {
+  width: 100%;
+  max-width: 340px;
+  display: block;
+  margin: 0 auto;
+  filter: drop-shadow(0 0 50px rgba(124,58,237,0.5));
+}
+
+/* ── STATS ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin: 80px 0;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.stat-item {
+  background: var(--bg2);
+  padding: 40px 32px;
+  text-align: center;
+  transition: background 0.2s;
+}
+.stat-item:hover { background: rgba(124,58,237,0.08); }
+
+.stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 52px;
+  letter-spacing: 2px;
+  color: var(--glow);
+  line-height: 1;
+  text-shadow: 0 0 30px rgba(167,139,250,0.4);
+}
+
+.stat-label {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-top: 8px;
+}
+
+/* ── HOW TO BUY ── */
+#buy { text-align: center; }
+
+.buy-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-top: 60px;
+}
+
+.buy-step {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 36px 24px;
+  text-align: left;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.buy-step::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--purple), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.buy-step:hover {
+  border-color: rgba(124,58,237,0.5);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+.buy-step:hover::before { opacity: 1; }
+
+.step-number {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 56px;
+  color: rgba(124,58,237,0.2);
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+.step-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.step-desc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+/* ── TOKENOMICS ── */
+#tokenomics { text-align: center; }
+
+.token-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 60px;
+  text-align: left;
+}
+
+.token-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 36px;
+  transition: all 0.3s;
+}
+.token-card:hover {
+  border-color: rgba(124,58,237,0.4);
+  box-shadow: 0 0 40px rgba(124,58,237,0.1);
+}
+
+.token-card-icon { font-size: 36px; margin-bottom: 16px; }
+
+.token-card h3 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.token-card .value {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px;
+  letter-spacing: 2px;
+  color: var(--glow);
+  line-height: 1;
+}
+
+.token-card p {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 10px;
+  line-height: 1.7;
+}
+
+/* ── ROADMAP ── */
+#roadmap { max-width: 800px; }
+
+.roadmap-line {
+  position: relative;
+  padding-left: 40px;
+  margin-top: 60px;
+}
+
+.roadmap-line::before {
+  content: '';
+  position: absolute;
+  left: 8px; top: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--purple), transparent);
+}
+
+.rm-item {
+  position: relative;
+  margin-bottom: 56px;
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: all 0.6s ease;
+}
+
+.rm-item.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.rm-item::before {
+  content: '';
+  position: absolute;
+  left: -36px; top: 6px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--purple);
+  box-shadow: 0 0 16px rgba(124,58,237,0.6);
+}
+
+.rm-phase {
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: var(--purple);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.rm-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.rm-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.9;
+  max-width: 560px;
+}
+
+/* ── COMMUNITY ── */
+#community { text-align: center; }
+
+.social-grid {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 50px;
+  flex-wrap: wrap;
+}
+
+.social-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px 48px;
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.3s;
+  min-width: 200px;
+}
+
+.social-card:hover {
+  border-color: rgba(124,58,237,0.5);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.social-icon { font-size: 40px; margin-bottom: 16px; }
+
+.social-name {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.social-handle {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 1px;
+}
+
+/* ── CONTRACT ── */
+.ca-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 28px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 40px;
+  max-width: 620px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ca-label {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--purple);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.ca-address {
+  font-size: 13px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ca-copy {
+  background: rgba(124,58,237,0.2);
+  border: 1px solid var(--border);
+  color: var(--glow);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: none;
+  transition: all 0.2s;
+  white-space: nowrap;
+  font-family: 'DM Mono', monospace;
+}
+.ca-copy:hover {
+  background: rgba(124,58,237,0.4);
+}
+
+/* ── FOOTER ── */
+footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 60px 24px;
+  border-top: 1px solid var(--border);
+}
+
+.footer-owl { font-size: 40px; margin-bottom: 16px; }
+
+footer p {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 2px;
+  line-height: 2;
+}
+
+footer strong { color: var(--glow); }
+
+/* ── DIVIDER ── */
+.divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  position: relative;
+  z-index: 1;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  nav { padding: 16px 20px; }
+  .nav-links { display: none; }
+  #about { grid-template-columns: 1fr; gap: 40px; }
+  .stats-grid { grid-template-columns: 1fr; }
+  .buy-steps { grid-template-columns: 1fr 1fr; }
+  .token-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .buy-steps { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+
+<canvas id="stars-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">🦉 $OWLHOOT</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#buy">How to Buy</a></li>
+    <li><a href="#tokenomics">Tokenomics</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#community" class="nav-cta">Community</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <canvas id="owl-canvas" width="440" height="440"></canvas>
+  <p class="hero-eyebrow">The Owl Has Arrived on Solana</p>
+  <h1 class="hero-title">$OWL<span>HOOT</span></h1>
+  <p class="hero-sub">Nobody summoned it. Nobody asked. <em>It just showed up.</em><br>And now it's your problem.</p>
+  <div class="hero-buttons">
+    <a href="#buy" class="btn-primary">🦉 Buy $OWLHOOT</a>
+    <a href="#community" class="btn-secondary">Join Community</a>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-inner" id="ticker"></div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-text reveal">
+    <p class="section-label">What Is This</p>
+    <h2 class="section-title">The Owl<br>Doesn't<br>Explain.</h2>
+    <p>Nobody knows where the owl came from. Nobody knows what it wants. It showed up on the Solana blockchain, it hooted twice, and now it's your problem.</p>
+    <p>$OWLHOOT is the official coin of the global owl impression movement — the viral sensation where <strong>millions of people imagined</strong> how an owl would hoot if it was from a different country, a different planet, or a different tax bracket.</p>
+    <p>The owl does not care about your portfolio. The owl does not care about your entry price. <strong>The owl hoots when it wants.</strong> This is its chain now.</p>
+  </div>
+  <div class="about-visual reveal">
+    <canvas id="owl-about-canvas" width="680" height="680"></canvas>
+  </div>
+</section>
+
+<!-- STATS -->
+<div style="position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 24px;">
+  <div class="stats-grid reveal">
+    <div class="stat-item">
+      <div class="stat-num">1B</div>
+      <div class="stat-label">Total Supply</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">0%</div>
+      <div class="stat-label">Team Tokens</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Community Owned</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- HOW TO BUY -->
+<section id="buy" style="max-width:1100px;">
+  <p class="section-label reveal">Get $OWLHOOT</p>
+  <h2 class="section-title reveal">How To Buy</h2>
+  <p class="reveal" style="color:var(--muted);font-size:14px;max-width:480px;margin:0 auto;line-height:1.8;">Four steps. Even the owl could do it. The owl chooses not to. It already has enough.</p>
+
+  <div class="buy-steps">
+    <div class="buy-step reveal">
+      <div class="step-number">01</div>
+      <div class="step-title">Get a Wallet</div>
+      <div class="step-desc">Download Phantom Wallet from phantom.app. Available on iOS, Android, and Chrome extension. Create your wallet and save your seed phrase.</div>
+    </div>
+    <div class="buy-step reveal">
+      <div class="step-number">02</div>
+      <div class="step-title">Get Some SOL</div>
+      <div class="step-desc">Buy Solana (SOL) from any exchange — Binance, Coinbase, Kraken. Send it to your Phantom wallet address.</div>
+    </div>
+    <div class="buy-step reveal">
+      <div class="step-number">03</div>
+      <div class="step-title">Go to pump.fun</div>
+      <div class="step-desc">Visit pump.fun and connect your Phantom wallet. Search for $OWLHOOT or paste the contract address below.</div>
+    </div>
+    <div class="buy-step reveal">
+      <div class="step-number">04</div>
+      <div class="step-title">Swap & Hold</div>
+      <div class="step-desc">Enter the amount of SOL you want to swap. Click Buy. Welcome to the owl's domain. It is aware of your purchase.</div>
+    </div>
+  </div>
+
+  <div class="ca-box reveal">
+    <span class="ca-label">CA</span>
+    <span class="ca-address" id="caAddr">— Contract address will appear after launch —</span>
+    <button class="ca-copy" onclick="copyCA()">Copy</button>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- TOKENOMICS -->
+<section id="tokenomics">
+  <p class="section-label reveal">The Numbers</p>
+  <h2 class="section-title reveal">Tokenomics</h2>
+
+  <div class="token-grid">
+    <div class="token-card reveal">
+      <div class="token-card-icon">🪙</div>
+      <h3>Total Supply</h3>
+      <div class="value">1,000,000,000</div>
+      <p>One billion $OWLHOOT tokens. Fixed supply. No minting. The owl has spoken.</p>
+    </div>
+    <div class="token-card reveal">
+      <div class="token-card-icon">🔥</div>
+      <h3>Burned at Launch</h3>
+      <div class="value">0%</div>
+      <p>Every token goes directly to the community. The owl does not burn what it has not hooted.</p>
+    </div>
+    <div class="token-card reveal">
+      <div class="token-card-icon">💧</div>
+      <h3>Liquidity</h3>
+      <div class="value">100%</div>
+      <p>All liquidity locked. LP burned. The owl cannot rug. The owl would not rug. The owl has standards.</p>
+    </div>
+    <div class="token-card reveal">
+      <div class="token-card-icon">👥</div>
+      <h3>Team Allocation</h3>
+      <div class="value">0%</div>
+      <p>No team tokens. No vesting schedule. No insider wallets. Just the owl, the chain, and you.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ROADMAP -->
+<section id="roadmap" style="max-width:900px;">
+  <p class="section-label">The Plan</p>
+  <h2 class="section-title">Roadmap</h2>
+
+  <div class="roadmap-line">
+    <div class="rm-item">
+      <div class="rm-phase">Phase 1</div>
+      <div class="rm-title">Genesis Hoot</div>
+      <div class="rm-desc">Token deployment on Solana. Establishment of official $OWLHOOT Twitter/X and Telegram presence. Initial liquidity provisioned. The owl observes. It does not speak yet. It is watching your wallet.</div>
+    </div>
+    <div class="rm-item">
+      <div class="rm-phase">Phase 2</div>
+      <div class="rm-title">The Great Hooting</div>
+      <div class="rm-desc">Community growth campaign. Launch of the "What If The Owl Was From [X]" viral challenge. First 500 holders milestone. Owl impression leaderboard established. The owl begins to understand what virality means. It is cautiously interested.</div>
+    </div>
+    <div class="rm-item">
+      <div class="rm-phase">Phase 3</div>
+      <div class="rm-title">Owl Intelligence Expansion</div>
+      <div class="rm-desc">Community wallet established. DEX listing pursued on Raydium and Jupiter. First 1,000 holders milestone. The owl begins to understand what a market cap is. It is not impressed. It continues hooting.</div>
+    </div>
+    <div class="rm-item">
+      <div class="rm-phase">Phase 4</div>
+      <div class="rm-title">Ascension</div>
+      <div class="rm-desc">Tier-1 CEX outreach. Official owl merchandise store. $OWLHOOT DAO formation — all governance decisions ratified by the owl via hoot or silence. The owl will not explain its governance philosophy. This is non-negotiable.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- COMMUNITY -->
+<section id="community">
+  <p class="section-label reveal">Join The Flock</p>
+  <h2 class="section-title reveal">Community</h2>
+  <p class="reveal" style="color:var(--muted);font-size:14px;max-width:400px;margin:0 auto;line-height:1.8;">The owl does not build alone. Join the flock. The owl is aware you are reading this.</p>
+
+  <div class="social-grid">
+    <a href="#" class="social-card reveal">
+      <div class="social-icon">🐦</div>
+      <div class="social-name">Twitter / X</div>
+      <div class="social-handle">@owlhoot_sol</div>
+    </a>
+    <a href="#" class="social-card reveal">
+      <div class="social-icon">✈️</div>
+      <div class="social-name">Telegram</div>
+      <div class="social-handle">t.me/owlhoot</div>
+    </a>
+    <a href="#" class="social-card reveal">
+      <div class="social-icon">📊</div>
+      <div class="social-name">DexScreener</div>
+      <div class="social-handle">Coming at launch</div>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-owl">🦉</div>
+  <p><strong>$OWLHOOT</strong> — The Owl Has Arrived.</p>
+  <p style="margin-top:12px;">$OWLHOOT is a meme coin with no intrinsic value or expectation of financial return.<br>This is not financial advice. The owl is not a financial advisor. The owl is an owl.</p>
+</footer>
+
+<script>
+// ── CURSOR ──
+const cursor = document.getElementById('cursor');
+const cursorDot = document.getElementById('cursorDot');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+  cursorDot.style.left = e.clientX + 'px';
+  cursorDot.style.top = e.clientY + 'px';
+});
+document.querySelectorAll('a, button').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.style.transform = 'translate(-50%,-50%) scale(1.8)');
+  el.addEventListener('mouseleave', () => cursor.style.transform = 'translate(-50%,-50%) scale(1)');
+});
+
+// ── STARS ──
+const sc = document.getElementById('stars-canvas');
+const sctx = sc.getContext('2d');
+sc.width = window.innerWidth;
+sc.height = window.innerHeight;
+window.addEventListener('resize', () => { sc.width = window.innerWidth; sc.height = window.innerHeight; drawStars(); });
+
+function drawStars() {
+  sctx.clearRect(0,0,sc.width,sc.height);
+  for (let i = 0; i < 200; i++) {
+    const x = Math.random() * sc.width;
+    const y = Math.random() * sc.height;
+    const r = Math.random() * 1.2;
+    const a = Math.random() * 0.6 + 0.1;
+    sctx.fillStyle = `rgba(167,139,250,${a})`;
+    sctx.beginPath();
+    sctx.arc(x, y, r, 0, Math.PI*2);
+    sctx.fill();
+  }
+}
+drawStars();
+
+// ── TICKER ──
+const tickerItems = ['$OWLHOOT', 'THE OWL HAS ARRIVED', 'SOLANA', 'COMMUNITY DRIVEN', 'THE OWL IS WATCHING', '🦉', 'HOOT OR NEVER', '100% FAIR LAUNCH', 'NO TEAM TOKENS'];
+const ticker = document.getElementById('ticker');
+const repeated = [...tickerItems, ...tickerItems, ...tickerItems, ...tickerItems];
+ticker.innerHTML = repeated.map(t => `<span class="ticker-item">${t.startsWith('$') ? `<span>${t}</span>` : t} &nbsp;·&nbsp;</span>`).join('');
+
+// ── OWL DRAWING FUNCTION ──
+function drawCuteOwl(ctx, cx, cy, size, blink) {
+  ctx.save();
+  ctx.translate(cx, cy);
+
+  // body
+  const bodyGrad = ctx.createRadialGradient(0, size*0.1, size*0.1, 0, size*0.1, size*0.65);
+  bodyGrad.addColorStop(0, '#6b4c35');
+  bodyGrad.addColorStop(0.6, '#3d2b1f');
+  bodyGrad.addColorStop(1, '#1a1208');
+  ctx.fillStyle = bodyGrad;
+  ctx.beginPath();
+  ctx.ellipse(0, size*0.22, size*0.42, size*0.52, 0, 0, Math.PI*2);
+  ctx.fill();
+
+  // belly fluff
+  const bellyGrad = ctx.createRadialGradient(0, size*0.28, 0, 0, size*0.28, size*0.3);
+  bellyGrad.addColorStop(0, '#f0dfc0');
+  bellyGrad.addColorStop(1, 'rgba(240,223,192,0)');
+  ctx.fillStyle = bellyGrad;
+  ctx.beginPath();
+  ctx.ellipse(0, size*0.3, size*0.25, size*0.32, 0, 0, Math.PI*2);
+  ctx.fill();
+
+  // feather rows on belly
+  ctx.strokeStyle = 'rgba(180,140,90,0.25)';
+  ctx.lineWidth = 1;
+  for (let row = 0; row < 4; row++) {
+    for (let col = -2; col <= 2; col++) {
+      const fx = col * size*0.09;
+      const fy = size*0.12 + row * size*0.1;
+      ctx.beginPath();
+      ctx.arc(fx, fy, size*0.055, 0, Math.PI);
+      ctx.stroke();
+    }
+  }
+
+  // wings
+  ctx.fillStyle = '#2d1f14';
+  // left wing
+  ctx.beginPath();
+  ctx.moveTo(-size*0.2, size*0.0);
+  ctx.quadraticCurveTo(-size*0.58, size*0.15, -size*0.48, size*0.55);
+  ctx.quadraticCurveTo(-size*0.35, size*0.62, -size*0.2, size*0.5);
+  ctx.closePath();
+  ctx.fill();
+  // right wing
+  ctx.beginPath();
+  ctx.moveTo(size*0.2, size*0.0);
+  ctx.quadraticCurveTo(size*0.58, size*0.15, size*0.48, size*0.55);
+  ctx.quadraticCurveTo(size*0.35, size*0.62, size*0.2, size*0.5);
+  ctx.closePath();
+  ctx.fill();
+
+  // HEAD
+  const headGrad = ctx.createRadialGradient(0, -size*0.38, size*0.05, 0, -size*0.38, size*0.44);
+  headGrad.addColorStop(0, '#7a5a40');
+  headGrad.addColorStop(0.7, '#4a3020');
+  headGrad.addColorStop(1, '#2a1a10');
+  ctx.fillStyle = headGrad;
+  ctx.beginPath();
+  ctx.arc(0, -size*0.38, size*0.38, 0, Math.PI*2);
+  ctx.fill();
+
+  // ear tufts
+  ctx.fillStyle = '#3d2810';
+  [[-1,1],[1,1]].forEach(([dx, dy]) => {
+    ctx.beginPath();
+    ctx.moveTo(dx*size*0.12, -size*0.7);
+    ctx.quadraticCurveTo(dx*size*0.22, -size*0.88, dx*size*0.18, -size*0.96);
+    ctx.quadraticCurveTo(dx*size*0.26, -size*0.82, dx*size*0.28, -size*0.7);
+    ctx.closePath();
+    ctx.fill();
+  });
+
+  // facial disc
+  ctx.fillStyle = 'rgba(220,185,140,0.18)';
+  ctx.beginPath();
+  ctx.arc(0, -size*0.36, size*0.3, 0, Math.PI*2);
+  ctx.fill();
+
+  // EYES
+  const eyeY = -size*0.42;
+  [[-size*0.14, eyeY],[size*0.14, eyeY]].forEach(([ex, ey]) => {
+    // white sclera
+    ctx.fillStyle = '#fff8e8';
+    ctx.beginPath();
+    ctx.arc(ex, ey, size*0.115, 0, Math.PI*2);
+    ctx.fill();
+
+    if (blink) {
+      // blink line
+      ctx.strokeStyle = '#2a1a10';
+      ctx.lineWidth = size*0.04;
+      ctx.beginPath();
+      ctx.moveTo(ex - size*0.1, ey);
+      ctx.lineTo(ex + size*0.1, ey);
+      ctx.stroke();
+    } else {
+      // iris
+      const irisGrad = ctx.createRadialGradient(ex, ey, 0, ex, ey, size*0.09);
+      irisGrad.addColorStop(0, '#f5c518');
+      irisGrad.addColorStop(0.6, '#d4a017');
+      irisGrad.addColorStop(1, '#8a6200');
+      ctx.fillStyle = irisGrad;
+      ctx.beginPath();
+      ctx.arc(ex, ey, size*0.09, 0, Math.PI*2);
+      ctx.fill();
+
+      // pupil (large — cute!)
+      ctx.fillStyle = '#0a0a12';
+      ctx.beginPath();
+      ctx.arc(ex, ey, size*0.055, 0, Math.PI*2);
+      ctx.fill();
+
+      // glint
+      ctx.fillStyle = 'rgba(255,255,255,0.95)';
+      ctx.beginPath();
+      ctx.arc(ex + size*0.028, ey - size*0.028, size*0.022, 0, Math.PI*2);
+      ctx.fill();
+      // small second glint
+      ctx.fillStyle = 'rgba(255,255,255,0.5)';
+      ctx.beginPath();
+      ctx.arc(ex - size*0.022, ey + size*0.018, size*0.01, 0, Math.PI*2);
+      ctx.fill();
+    }
+  });
+
+  // BEAK
+  ctx.fillStyle = '#e8a820';
+  ctx.beginPath();
+  ctx.moveTo(-size*0.06, -size*0.28);
+  ctx.quadraticCurveTo(0, -size*0.18, size*0.06, -size*0.28);
+  ctx.quadraticCurveTo(0, -size*0.12, -size*0.06, -size*0.28);
+  ctx.fill();
+  // beak highlight
+  ctx.fillStyle = 'rgba(255,220,100,0.4)';
+  ctx.beginPath();
+  ctx.ellipse(0, -size*0.24, size*0.03, size*0.02, 0, 0, Math.PI*2);
+  ctx.fill();
+
+  // FEET
+  ctx.fillStyle = '#c8880e';
+  ctx.lineWidth = size*0.028;
+  ctx.lineCap = 'round';
+  [[-size*0.12, size*0.7],[size*0.12, size*0.7]].forEach(([fx, fy]) => {
+    [-1,0,1].forEach(dir => {
+      ctx.strokeStyle = '#c8880e';
+      ctx.beginPath();
+      ctx.moveTo(fx, fy);
+      ctx.lineTo(fx + dir*size*0.09, fy + size*0.1);
+      ctx.stroke();
+    });
+  });
+
+  ctx.restore();
+}
+
+// ── HERO OWL with blink animation ──
+const heroCanvas = document.getElementById('owl-canvas');
+const heroCtx = heroCanvas.getContext('2d');
+let blinkState = false;
+let blinkTimer = 0;
+
+function animateHeroOwl() {
+  heroCtx.clearRect(0, 0, 440, 440);
+  blinkTimer++;
+  if (blinkTimer % 180 === 0) {
+    blinkState = true;
+    setTimeout(() => blinkState = false, 150);
+  }
+  // subtle pulse glow
+  const t = Date.now() / 1000;
+  const pulse = Math.sin(t * 1.5) * 0.5 + 0.5;
+  heroCtx.save();
+  heroCtx.globalAlpha = 0.15 + pulse * 0.08;
+  const g = heroCtx.createRadialGradient(220, 220, 20, 220, 220, 160);
+  g.addColorStop(0, '#a78bfa');
+  g.addColorStop(1, 'transparent');
+  heroCtx.fillStyle = g;
+  heroCtx.fillRect(0, 0, 440, 440);
+  heroCtx.restore();
+
+  drawCuteOwl(heroCtx, 220, 240, 155, blinkState);
+  requestAnimationFrame(animateHeroOwl);
+}
+animateHeroOwl();
+
+// ── ABOUT OWL (static, larger) ──
+const aboutCanvas = document.getElementById('owl-about-canvas');
+const aboutCtx = aboutCanvas.getContext('2d');
+let aboutBlink = false;
+let aboutBlinkTimer = 0;
+
+function animateAboutOwl() {
+  aboutCtx.clearRect(0, 0, 680, 680);
+  aboutBlinkTimer++;
+  if (aboutBlinkTimer % 200 === 0) {
+    aboutBlink = true;
+    setTimeout(() => aboutBlink = false, 160);
+  }
+  const t = Date.now() / 1000;
+  const g = aboutCtx.createRadialGradient(340, 340, 10, 340, 340, 260);
+  g.addColorStop(0, 'rgba(124,58,237,0.12)');
+  g.addColorStop(1, 'transparent');
+  aboutCtx.fillStyle = g;
+  aboutCtx.fillRect(0, 0, 680, 680);
+  drawCuteOwl(aboutCtx, 340, 370, 230, aboutBlink);
+  requestAnimationFrame(animateAboutOwl);
+}
+animateAboutOwl();
+
+// ── SCROLL REVEAL ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.reveal, .rm-item').forEach(el => observer.observe(el));
+
+// ── COPY CA ──
+function copyCA() {
+  const addr = document.getElementById('caAddr').textContent;
+  if (addr.includes('—')) {
+    const btn = document.querySelector('.ca-copy');
+    const orig = btn.textContent;
+    btn.textContent = 'Not live yet';
+    setTimeout(() => btn.textContent = orig, 1500);
+    return;
+  }
+  navigator.clipboard.writeText(addr);
+  const btn = document.querySelector('.ca-copy');
+  btn.textContent = 'Copied!';
+  setTimeout(() => btn.textContent = 'Copy', 1500);
+}
+</script>
+</body>
+</html>
